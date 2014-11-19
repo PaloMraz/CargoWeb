@@ -1,0 +1,49 @@
+﻿@{
+  Layout = null;
+}
+@model CargoWeb.Models.LoaderViewModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width" />
+  <title>Koľajisko @this.Model.RailId, nakladacie miesto č. @this.Model.Id</title>
+</head>
+<body>
+  <h2>Koľajisko č. @this.Model.RailId</h2>
+  <h3>Nakladacie miesto č. @this.Model.Id</h3>
+  <div>Destinácie:</div>
+  <ul>
+    @foreach (string destination in this.Model.Destinations)
+    {
+      <li>@destination</li>
+    }
+  </ul>
+
+  @Scripts.Render("~/bundles/jquery")
+  <script src="~/Scripts/jquery.signalR-2.1.2.js"></script>
+  <script src="~/signalr/hubs"></script>
+
+  <script>
+    $(function () {
+      // Náš hub
+      var cargoHub = $.connection.cargoHub;
+
+      // Toto volá hub keď sa zmenia údaje.
+      cargoHub.client.onLoaderChanged = function (loaderModel) {
+        // Jednoducho reloadujeme stránku a je to :-)
+        window.location.reload(true);
+      };
+
+      // Naštartuje connection.
+      $.connection.hub.start().done(function () {
+      });
+    });
+  </script>
+
+</body>
+
+</html>
+
+

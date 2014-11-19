@@ -1,0 +1,29 @@
+﻿@model IEnumerable<CargoWeb.Models.CargoRailModel>
+
+@{
+  ViewBag.Title = "Index";
+}
+
+<h2>Koľajiská a nakladacie miesta</h2>
+
+@foreach (var rail in this.Model)
+{
+  <h3>Koľajisko č. @rail.Id</h3>
+
+    foreach (var loader in rail.Loaders)
+    {
+      using(Html.BeginForm("UpdateDestinations", "Cargo"))
+      {
+        <h4>Miesto č. @loader.Id</h4>
+        @Html.Hidden("railId", @rail.Id)
+        @Html.HiddenFor(l => loader.Id)
+        @Html.TextAreaFor(l => loader.Destinations)
+        <input type="submit" value="Uložiť" />
+      }
+      
+      @Html.ActionLink("Ukáž display", "LoaderView", 
+        routeValues: new { railId = rail.Id, loaderId = loader.Id }, 
+        htmlAttributes: new { target = "_blank" })
+    }
+}
+
